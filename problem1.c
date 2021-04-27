@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
+#include <string.h>
 
 //global variables
 int sum_total=0;
@@ -12,13 +13,13 @@ struct node
 	struct node *left;
 	struct node *right;
 	int data;
+  int height;
 };
 //tree structure
 struct tree
 {
+  int height;
 	struct node*root;
-	int level;
-
 };
 
 typedef struct node Node;
@@ -28,6 +29,7 @@ typedef struct tree Tree;
 int prime(int);
 int findHeight(int *,int); /*Find the height of the pramit*/
 void inOrderTraversal(Node_ptr);
+Tree* pyramid;
 
 int main()
 {
@@ -45,7 +47,7 @@ int main()
     }
 
     /*Initialize nodes and the tree*/
-    Tree* pyramid = malloc(sizeof(Tree));
+    pyramid = malloc(sizeof(Tree));
     int offset= 1;
     int corner=offset;
     int current_height=1;
@@ -59,6 +61,7 @@ int main()
     		corner+=offset;
     	}
 	    nodes[i]->data = arr[i];
+      nodes[i]->height=current_height;
 	    if(current_height!=height_total)
 	    {
 		    nodes[i]->left=nodes[i+current_height];
@@ -71,7 +74,7 @@ int main()
 	    }
     }
     pyramid -> root = nodes[0];
-    pyramid -> level = current_height;
+    pyramid -> height = height_total;
 
     /*Using inorder traversal logic, find maximum sum*/
     inOrderTraversal(pyramid->root);
@@ -90,11 +93,12 @@ void inOrderTraversal(Node_ptr root)
 {
 	if(root==NULL) return;
 	sum_total+=root->data;
-	if(max_all < sum_total ) max_all=sum_total;
-	
+	if(root->height==pyramid->height && max_all < sum_total ){
+    max_all=sum_total;
+  } 	
 	if(root->left !=NULL)
  	{
-	    if(prime(root->left->data))
+	    if(prime(root->left->data)==1)
 	    {
 	    	inOrderTraversal(root->left);
 	    	sum_total-=root->left->data;
@@ -102,9 +106,9 @@ void inOrderTraversal(Node_ptr root)
   	}
   	if(root->right !=NULL)
   	{
-    	if(prime(root->right->data))
+    	if(prime(root->right->data)==1)
     	{
-    		inOrderTraversal(root->right);
+    	inOrderTraversal(root->right);
 			sum_total-=root->right->data;
     	}
   	}
