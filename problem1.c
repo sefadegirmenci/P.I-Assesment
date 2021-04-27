@@ -125,6 +125,7 @@ int prime(int val)
         else
             return 1;
     }
+    if(val==1) return 1;
     return 0;
 }
 
