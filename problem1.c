@@ -1,12 +1,13 @@
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
+#include <string.h>
 
-//global variables
+// Global Variables
 int sum_total = 0;
 int max_all = 0;
 
-//nodes of the tree
+// Nodes of the tree
 struct node
 {
     struct node *left;
@@ -14,7 +15,7 @@ struct node
     int data;
     int height;
 };
-//tree structure
+// Tree Structure
 struct tree
 {
     int height;
@@ -32,16 +33,27 @@ Tree *pyramid;
 
 int main()
 {
-    printf("How many inputs?\n");
-    int count;
-    scanf("%d", &count);
-    printf("Enter inputs\n");
-    int *arr = malloc(sizeof(int) * count);
-    Node_ptr *nodes = malloc(sizeof(Node_ptr) * count);
+    int *arr = malloc(sizeof(int) * 2056);
+    int count=0;
+    FILE *fp = fopen("input.txt","r+");
+    char line[128];
 
+
+    while(fgets(line,sizeof(line),fp))
+    {
+
+        char* token = strtok(line," \n\r");
+        while(token!=NULL)
+        {
+            arr[count++] = atoi(token);
+            token = strtok(NULL," \n\r");
+        }
+    }
+    fclose(fp);
+    
+    Node_ptr *nodes = malloc(sizeof(Node_ptr) * count);
     for (int i = 0; i < count; i++)
     {
-        scanf("%d", &arr[i]);
         nodes[i] = (Node_ptr)malloc(sizeof(Node));
     }
 
@@ -129,13 +141,13 @@ int prime(int val)
     return 0;
 }
 
-/*Find height of the pyramid*/
-int findHeight(int *arr, int height)
+/*Height of the pyramid*/
+int findHeight(int *arr, int count)
 {
     int current = 0;
     int current_level = 1;
     int left = current + current_level;
-    while (left <= height)
+    while (left <= count)
     {
         current_level++;
         current = left;
